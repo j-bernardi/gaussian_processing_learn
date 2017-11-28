@@ -21,7 +21,7 @@ From cmd, call:
 		Append min_x1 max_x1 min_x2 max_x2 ... etc to the arguments to set bounds on the range in which the optimiser will 			search for a solution. 
             	Note:
             		y/n still variable
-            		Selecting a bound of 0 will set the corresponding bound to the data bound for interpolation, wherever that may 				be
+            		Selecting a bound of 0 will set the corresponding bound to the data bound for interpolation, wherever that may be
         	eg:
             		python optimise_variable data.txt (y/n) 0 100 5 10 ... etc
             		chooses x1 = [data_lower_bound, 100], x2 = [5,10] ... etc

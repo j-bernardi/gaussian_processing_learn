@@ -1,0 +1,334 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.2.2/d3.min.js"></script>
+		<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+		
+		<title>Optimisation and Prediction Tools</title>
+		
+		<style>
+			.selector {
+				margin : 10px;
+			}
+		</style>
+		
+	</head>
+	
+	
+	<body>
+		<h1>
+			Optimisation and Prediction tools with 2d and 3d plots
+		</h1>
+		
+		<div class='main-div' id="introduction-div">
+			<h2 id="introduction-header">
+				Introduction
+			</h2>
+			<p id="introduction-paragraph">
+			Info about site- ie who made it, gaussian processing (links to talk about jackknifing etc)
+			</p>
+		</div>
+		
+		<div class='main-div' id="input-div">
+			
+			<h2 id="input-data-header">
+				Input data and arguments
+			</h2>
+			
+			<h4 class="info" id="hover-info">
+				(Hover over each title for description)
+			</h4>
+			
+			<h3 id="problem-selection-header">
+				Problem Selection
+			</h3>
+			
+			<div class="button-group" id="script-selection-divison">
+				<h4 id="script-type-header">Script type:</h4>
+				Predict: <input id="select-predict" name="select-predict" type="checkbox" class="script-selector" value="Predict">
+				Optimise: <input id="select-optimise" name="check-script" type="checkbox" class="script-selector" value="Optimise">
+			</div>
+			
+			<div id="dimension-selection-division" class ="selector"> 
+				Dimensions:
+				<input id="dimension-selection-box" type="number" min="1" step="1" value="1">
+				<br>
+				<input name="generate-table" type="button" id="generate-table" style="margin: 10px" value="Generate Table" onclick="createTable();">	
+			</div>
+			
+			<h3 id="input-arguments-header">
+				Input Arguments
+			</h3>
+			
+			<div class="button-group" id="data-filename-input-divison">
+				<p>
+					Filename:
+				</p>
+				
+				<input id="filename-input" type="text" style="width:50%" name="arg1" 
+					placeholder="file:///home/user_name/Documents/data_file.txt">
+			</div>	
+		
+			<div id="arg-table"></div>
+			
+			Insert reset button here
+		</div>
+		
+		
+		<div class='main-div' id="plotting-div">
+			<h2 id='plotting-tools-header'>
+				Plotting Tools (for 1d, 2d, 3d data)
+			</h2>
+			
+			<div class="button-group" id="plot-filename-input-division">
+				<p>Plotting filname:</p> 
+				<input type="text" name="plotting-file" style="width:50%"
+					placeholder="file:///home/user_name/Documents/plotting_file.txt">
+				<p>(comma delimited data with or without headers)</p>
+			</div>
+			
+			<div id="graph">
+				<h3 id="plot-header">
+					Plot
+				</h3>
+				<div class="button-group" id="plot-button">
+					<button onclick="makePlot()">Plot</button>
+				</div>
+			</div>
+			
+		</div>	
+	
+	<script type=text/javascript >	
+			
+			function makePlot() {
+				
+				var n = document.getElementById("dimension-selection-box").value;
+				if (n>=1 && n<=3) {
+					//Do the plotting per dimension
+					
+				}
+				else {
+					console.log('Can only plot 1d, 2d, 3d data at present. Not plotting.')
+				}
+			}
+	
+			function isNumber(n) {
+				  return !isNaN(parseFloat(n)) && isFinite(n);
+				}
+			
+			//TODO: check what this stuff means
+			function read_in_data(filename){
+				//UNEDITED: see getNames
+				
+				var n = document.getElementById("dimension-selection-box").value;
+				console.log('reading in data file')
+
+				var file_list = []
+				var first_row= []
+				$.ajax({ url: filename, success: function(file_content) {
+						
+				    file_list=file_content.split('\n');
+					first_row=file_list[0].split(/[ ,]+/);
+				}})
+				
+				///example data
+				data=[[40.0,39.6,22.4,1.1568528 ],
+					[60.0, 10.8 ,51.2, 0.9902016  ],
+					[20.0, 126.0, 26.0 ,1.1031587999999999  ],
+					[90.0, 3.6 ,58.4, 0.9328896  ],
+					[10.0, 25.2 ,36.8, 0.9369972  ],
+					[80.0, 133.2 ,36.8, 1.2462407999999998  ],
+					[100.0, 126.0 ,44.0 ,1.260324  ],
+					[80.0, 129.6 ,40.4 ,1.2474288  ],
+					[0.0, 129.6, 22.4 ,0.02404926  ],
+					[100.0, 10.8, 51.2, 0.9861407999999999  ],
+					[30.0, 28.8, 51.2, 1.04562  ]
+					]
+				return data
+			}
+				
+			function getNames(filename) {
+				
+				console.log('Getting names from datafile: ' + filename)
+				var n = document.getElementById("dimension-selection-box").value;
+				
+				var row_list = [];
+				var first_row = [];
+				
+				//TODO: Check how this works
+				console.log('Attempting to read data with ajax...')
+				
+				//possible pass by ref to getFirstRow(filename, first_row_obj and make first_row_object to do so 
+				$.when( 
+					/*$(document).ready(function() {	
+						console.log('ajax ready')*/
+						$.ajax({ 
+							url: filename,
+							success: function(file_content) {
+							
+								console.log('ajax was successful')
+								//splits each row into a different element
+						   		 row_list=file_content.split('\n');
+								//look at the first row
+								first_row = row_list[0].split(/[ ,]+/);
+								
+								return first_row
+							},
+							error: function(errorThrown){
+						          console.log('error when loading first row (called by ajax)');
+						}/*);*/
+					}) ).then( function(){
+						console.log('first row : ' + first_row)
+						//set the names of the data-rows
+						var names = [];
+					
+						//check if ajax ran
+						if (typeof first_row == 'undefined'){
+							console.log('Ajax was unsuccessful. Resorting to default')
+						}
+						else {
+							console.log('first row received : ' + first_row);
+							console.log('first row starts with a number (ie isData): ' + isNumber(first_row[0]));
+						}
+						//set names dependent on first row
+						if (typeof first_row == 'undefined' || isNumber(first_row[0])) {
+							console.log('string not detected on first row- resorting to default titles for names')
+							for (var i = 0; i < n ; i++) {
+								names[i] = "X"+(i+1);
+							}
+							names[n] = "dep_var";
+						}
+						else {
+							console.log('reading supplied names')
+							for (var i = 0; i < n ; i++) {
+								names[i] = first_row[i];
+							}
+						}
+						
+						console.log('returning names')
+						return names;
+					});
+			}
+			
+			/*function getFirstRow(filename) {
+				
+				var first_row = [];
+				var row_list = [];
+				
+				$(document).ready(function() {	
+					console.log('ajax ready')
+				$.ajax({ 
+						type: "GET",
+						url: filename,
+						dataType: "jsonp",
+						success: function(file_content) {
+						
+							console.log('ajax was successful')
+							//splits each row into a different element
+					   		 row_list=file_content.split('\n');
+							//look at the first row
+							first_row = row_list[0].split(/[ ,]+/);
+							
+							return first_row
+						},
+						error: function(errorThrown){
+					          console.log('error when loading first row (called by ajax)');
+					      }
+					});
+				});
+			}*/
+			
+			function createTable() {
+				console.log('createTable called')
+				if (document.getElementById("select-predict").checked && document.getElementById("select-optimise").checked) {
+					console.log('both boxes checked- doing nothing. Please select only one.')
+				}
+				else if (document.getElementById("select-predict").checked) {
+					createPredictTable();
+				}
+				else if (document.getElementById("select-optimise").checked) {
+					createOptimiseTable();
+				}
+				else {
+					console.log('No script was selected, cannot initialise')
+				}
+			}
+			
+			//a script to make the argument table
+			function createPredictTable() {
+				
+				var num_args = document.getElementById("dimension-selection-box").value;
+				var theader = '<table border="1">\n';
+				var tbody = '';
+				
+				var names = getNames(document.getElementById("filename-input").value);
+				
+				//Go through and add the headers and lavel. 
+				//TODO: potentially change to names from datafile
+				tbody += '<td>Dimension:</td>'
+				for( var i=0;i<num_args; i++) {
+					tbody += '<td>';
+					tbody+= names[i] ;
+					tbody += '</td>'
+				}
+				//end the row, start the next
+				tbody+='</tr><tr>'
+				tbody += '<td>Value:</td>'
+				//add the input buttons
+				for( var i=0;i<num_args; i++) {
+					tbody += '<td>';
+					tbody+= '<input type ="number" min="0" value="0" name="arg ' + (i+1) +'">' ;
+					tbody += '</td>';
+				}
+				
+				tbody+='</tr>\n';
+				var tfooter = '</table>';
+				
+				document.getElementById('arg-table').innerHTML = theader + tbody + tfooter;
+				console.log('Table created')
+			}
+			
+			//makes argument table for optimise
+			function createOptimiseTable(){
+				
+				var num_dimensions = document.getElementById("dimension-selection-box").value;
+				var num_args = num_dimensions*2;
+				var theader = '<table border="1" style="margin:10px">\n';
+				var tbody = '';
+				var names = getNames(document.getElementById("filename-input").value);
+				
+				//Go through and add the headers and label. 
+				//TODO: potentially change to names from datafile
+				tbody += '<td>Bound:</td>';
+				for( var i=0;i<num_args; i++) {
+					tbody += '<td>';
+					if (i%2 == 0) {
+						tbody+= names[i/2] + '_LowerBound' ;
+					} else {
+						tbody+= names[(i-1)/2] + '_UpperBound' ;
+					}
+					tbody += '</td>';
+				}
+				//end the row, start the next and label it
+				tbody+='</tr><tr><td>Input Value:</td>'
+				//add the input buttons
+				for( var i=0;i<num_args; i++) {
+					tbody += '<td>';
+					tbody+= '<input type ="number" min="0" value="0" name="arg ' + (i+1) +'">' ;
+					tbody += '</td>';
+				}
+				
+				tbody+='</tr>\n';
+				var tfooter = '</table>';
+				
+				document.getElementById('arg-table').innerHTML = 
+					'Plotting Required?: <input id="select-plotting" name="select-plotting" type="checkbox" value="Plotting Required?">'
+						+ theader + tbody + tfooter +
+						'(leave as 0 to default to data-bounds)';				
+				console.log('Table created')
+			}
+			</script>
+	</body>
+</html>

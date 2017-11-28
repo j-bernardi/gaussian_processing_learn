@@ -1,0 +1,116 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.2.2/d3.min.js"></script>
+		<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+		
+		
+		<title>Optimisation and Prediction Tools</title>
+		
+		<style>
+			.selector {
+				margin : 10px;
+			}
+			#results-division {
+				float: right;
+				margin:20px;
+				background-color: Beige;
+			}
+		</style>
+		
+	</head>
+	
+	
+	<body>
+		<h1>
+			Optimisation and Prediction tools with 2d and 3d plots
+		</h1>
+		
+		<div class='main-div' id="introduction-div">
+			<h2 id="introduction-header">
+				Introduction
+			</h2>
+			<p id="introduction-paragraph">
+			Info about site- ie who made it, gaussian processing (links to talk about jackknifing etc)
+			</p>
+		</div>
+		
+		<div class='main-div' id="input-div">
+			
+			<div id="results-division">
+				
+			</div>
+			
+			
+			<h2 id="input-data-header">
+				Input data and arguments
+			</h2>
+			
+			<h4 class="info" id="hover-info">
+				(Hover over each title for description)
+			</h4>
+			
+			<h3 id="problem-selection-header">
+				Problem Selection
+			</h3>
+			
+			<div class="button-group" id="script-selection-divison">
+				<h4 id="script-type-header">Script type:</h4>
+				Predict: <input id="select-predict" name="select-predict" type="checkbox" class="script-selector" value="Predict">
+				Optimise: <input id="select-optimise" name="check-script" type="checkbox" class="script-selector" value="Optimise">
+				<br>
+				Jackknife? (Predict only) <input id="jackknife-checkbox" type="checkbox">
+				Output optimisation path to file? (Optimise only) <input id='optimise-output-checkbox' type="checkbox">
+				<p>
+					File: (hover should give input type) 
+					<input id="datafile-input" type="file" style="width:100%;margin:8px" name="datafile-input">
+				</p>
+				
+				<button id='generate-table-button' style="margin:8px">Generate Table</button>
+			</div>
+			
+			<h3 id="input-arguments-header">
+				Input Arguments
+			</h3>
+		
+			<div id="arg-table"></div>
+			<div id='run-script-button-division'>
+			<h3> Run Script</h3>
+				<button id='run-script-button'>Run Script</button>
+			</div>
+			
+		</div>
+		
+		
+		<div class='main-div' id="plotting-div">
+			<h2 id='plotting-tools-header'>
+				Plotting Tools (for 1d, 2d, 3d data)
+			</h2>
+			
+			<div class="button-group" id="plot-file-input-division">
+				<p>Plotting file: (hover should give input parameters)</p> 
+				<input id='plot-file-input' type="file" name="plot-file" style="width:100%">
+				<p>Input a data file delmited by any of : /[ ,]+/ <br> May be input with or without headers</p>
+			</div>
+			
+			<div id="plotting-info-division">
+				<div class="button-group" id="plot-button-division">
+					<button id="plot-button" style="margin:8px">Plot Current File</button> 		Animate optimisation path? (optimisation path only)<input id='animate-checkbox' type="checkbox"> 
+				</div>
+				<div class="button-group" id="plot-remove-button-division">
+					<button id="plot-remove-button" style="margin:8px" onclick="removePlot('plot-remove-button-division')">Remove Last Plot</button>
+					<button id="reset-plot-area-button" style="margin:8px" onclick="resetArea('plot-remove-button-division')">Reset Plot Area</button>
+				</div>
+				<h3 id="plot-header">
+					Plot
+				</h3>
+			</div>
+			<div id="graph-division" style="width:100%;margin:5px"></div>
+		</div>	
+		
+	<script type="text/javascript" src="predict_and_optimise_script.js"> </script>
+	
+	</body>
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>index</title>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.2.2/d3.min.js"></script>
+   
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+
+
+
+<script type="text/javascript">
+var sequentialScale = d3.scaleSequential()
+  .domain([0.5, 1.4])
+  .interpolator(d3.interpolateViridis);
+
+
+function find_color(value){
+
+
+    hue = (275*value)
+
+    if (hue > 359){
+        hue = 359
+    }
+    if (hue < 1){		
+        hue = 1
+    }
+    console.log('hue='+hue.toString())
+    //return 'hsl(' + hue + ', 100%, 50%)';
+return sequentialScale(value)
+}
+
+
+function add_to_plot(x1,y1,z1,neutron_multiplier,lithium_ceramic,TBR_val){
+
+
+	
+	
+	console.log(x1,y1,z1,neutron_multiplier,lithium_ceramic,TBR_val)
+	
+symbol_for_type_of_nm='circle'
+
+	
+	legend_name = 'TBR '+ TBR_val.toString() +', ' + neutron_multiplier +' '+ x1.toString() + 'mm, '+ lithium_ceramic + ' '+ y1.toString()+ 'mm, 6Li '+z1.toString()+'%'
+	var trace1 = {
+		//name: legend_name,
+		x: [x1],
+		y: [y1],
+		z: [z1],
+		mode: 'markers',
+		annotations:[x1],
+	
+	
+		marker: {
+			size: 9,
+			symbol:symbol_for_type_of_nm,
+			color:find_color(TBR_val),
+			opacity:0.8,
+			//colorscale:'Viridis'
+			//autocolorscale: false,
+			//colorscale: [[0,"rgb(  0,  0,  0)"],[1.0,"rgb(255,255,255)"]] ,
+			//showscale: true,
+			
+			},
+		type: 'scatter3d'
+};
+
+
+
+var data = [trace1];
+var layout = {
+              autosize: true,
+              height:700,
+    scene:{
+    xaxis: {
+          title: "Neutron multiplier bed height",
+          		titlefont: {size: 20},
+		        tickfont: {size: 16},
+          borderwidth: '50',
+          linecolor: '#969696',
+          linewidth: 4,
+    },
+    yaxis: {
+          title: "Lithium ceramic bed height",
+          		titlefont: {size: 20},
+		        tickfont: {size: 16},
+          borderwidth: '50',
+                    linecolor: '#969696',
+                    linewidth: 4
+    },
+    zaxis: {
+          title: "6Li enrichment",
+          		titlefont: {size: 20},
+		        tickfont: {size: 16},
+          borderwidth: '50',
+                    linecolor: '#969696',
+                    linewidth: 4
+    }
+    },
+	showlegend:false,
+    margin: {
+	    l: 10,
+	    r: 10,
+	    b: 10,
+	    t: 0
+    }
+
+};
+Plotly.plot('plotly_TBR_3d_scatter_div', data, layout);
+
+
+}
+
+
+
+
+
+
+function read_in_data(filename){
+console.log('reading in data file')
+
+	$.ajax({ url: filename, success: function(file_content) {
+                 
+
+			if (yaxis_title_ang=='Energy (eV)'){
+				ymultipler=1000000
+			}
+			if (yaxis_title_ang=='Energy (MeV)'){
+				ymultipler=1
+			}
+
+		
+        file_list=file_content.split('\n');
+		first_row=file_list[0].split(/[ ,]+/);
+}})
+data=[[40.0,39.6,22.4,1.1568528 ],
+[60.0, 10.8 ,51.2, 0.9902016  ],
+[20.0, 126.0, 26.0 ,1.1031587999999999  ],
+[90.0, 3.6 ,58.4, 0.9328896  ],
+[10.0, 25.2 ,36.8, 0.9369972  ],
+[80.0, 133.2 ,36.8, 1.2462407999999998  ],
+[100.0, 126.0 ,44.0 ,1.260324  ],
+[80.0, 129.6 ,40.4 ,1.2474288  ],
+[0.0, 129.6, 22.4 ,0.02404926  ],
+[100.0, 10.8, 51.2, 0.9861407999999999  ],
+[30.0, 28.8, 51.2, 1.04562  ]
+]
+return data
+}
+
+
+function add_all_data_to_plot(value){
+
+tbr_data=read_in_data('')
+for (i = 0; i < tbr_data.length; i++) { 
+	
+		add_to_plot(tbr_data[i][0],tbr_data[i][1],tbr_data[i][2],'Be','Li4SiO4',tbr_data[i][3]);
+	
+}
+
+	//setTimeout(function () { add_to_plot(1.1,1.1,1.1,'Be','Li4SiO4','1.321'); },5000)
+	
+	//add_to_plot(2,1.1,2,'Be','Li4SiO4','0.921')
+}
+</script>
+<body>
+<button onclick="add_all_data_to_plot()">Click me</button>
+<button onclick="add_to_plot(1,1,1,'Be','Li4SiO4','1.121')">Click me</button>
+
+
+ <div align="center" id="plotly_TBR_3d_scatter_div" style="width: 100%; height: 100%;"><!-- Plotly chart will be drawn inside this DIV --></div>
+</body>
+</html>

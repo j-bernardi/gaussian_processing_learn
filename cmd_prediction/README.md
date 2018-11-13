@@ -9,17 +9,21 @@ From cmd, call:
 Optional arguments: 
 
 	i) print to file:
-		use 'y' as first argument if the optimisation path is required to be output in a file- useful for visual plotting, eg:
+		Use 'y' as first argument if the optimisation path is required to be output in a file- useful for visual plotting, eg:
 			python optimise_variable data.txt y
-	Note: will save output file to current working directory.
+		Note: will save output file to current working directory.
+
 	ii) user-set bounds:
 		Append min_x1 max_x1 min_x2 max_x2 ... etc to the arguments to set bounds on the range in which the optimiser will search for a solution. 
+	
 	Note 1:
 		y/n still variable
+	
 	Note 2:
-	Selecting a bound of 0 will set the corresponding bound to the data bound for interpolation, wherever that may be, eg:
-		python optimise_variable data.txt (y/n) 0 100 5 10 ... etc
-	chooses x1 = [data_lower_bound, 100], x2 = [5,10] ... etc
+		Selecting a bound of 0 will set the corresponding bound to the data bound for interpolation, wherever that may be, eg:
+			python optimise_variable data.txt (y/n) 0 100 5 10 ... etc
+		chooses x1 = [data_lower_bound, 100], x2 = [5,10] ... etc
+	
 	Note 3: 
 		Can specify as few or many bounds as user requires- all missing bounds after the last passed argument will  default to the data-set bounds, else use 0.
 		lb = ub implies a fixed variable.

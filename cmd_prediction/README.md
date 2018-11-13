@@ -3,9 +3,11 @@ Find/predict the position of an optimal point (and its value) from an (incomplet
 
 ## Usage
 From cmd, call:
+
 	python prediction_processes/optimise path/to/datafile_name.txt arguments
 
 Optional arguments: 
+
 	i) print to file:
 		use 'y' as first argument if the optimisation path is required to be output in a file- useful for visual plotting, eg:
 			python optimise_variable data.txt y

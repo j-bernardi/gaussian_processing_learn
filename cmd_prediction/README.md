@@ -1,16 +1,11 @@
-This folder contains scripts that can:
-1) find/predict the position of an optimal point (and its value) from an (incomplete) datafile with n dimensions within user-set bounds (optimise), or 
+# Optimise
+Find/predict the position of an optimal point (and its value) from an (incomplete) dataset with n dimensions within user-set bounds 
 
-2) predict the value of a data point specified by the user based on a data set of dimensions and values passed in a datafile (predict).
-
-Datafile should be white-space delimited with n dimensions and the dependent variable as the final column. Rows (ie data) seperated by \n
-May contain headers (optionally)- scripts will utilise headers (ie text as first row) to print useful visual results, else will default.
-
-
-1) optimise:
+## Usage
 From cmd, call:
 	python prediction_processes/optimise path/to/datafile_name.txt arguments
-	optional usage (arguments): 
+
+Optional arguments: 
         i) print to file:
 		use 'y' as first argument if the optimisation path is required to be output in a file- useful for visual plotting
        		eg:
@@ -29,10 +24,21 @@ From cmd, call:
             		Can specify as few or many bounds as user requires- all missing bounds after the last passed argument will  default to the data-set bounds, else use 0.
 		        lb = ub implies a fixed variable.
 
-2) predict:
+# Predict
+Predict the value of an n-dimensional datapoint specified by the user, based on a dataset passed in a datafile.
+
+## Usage
 From cmd, call:
 	python prediction_processes/optimise path/to/datafile_name.txt dimensions
 	
 	Where dimensions is the point to be queried.
 	The order of the dimensions provided on the command line must match the order in which they appear on the file input 'data.txt')
 	dimensions are delimited by white space on the command line.
+
+
+# Datafile format
+White-space delimited with n dimensions and the dependent variable as the final column. 
+
+Rows (ie data) seperated by newline character '\n'
+
+May contain headers (optionally)- scripts will utilise headers (ie text as first row) to print useful visual results, else reverts to default option.
